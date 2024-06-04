@@ -13,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import ec.com.pmyb.checklistapp.ui.screen.TasksScreen
@@ -22,7 +23,8 @@ import ec.com.pmyb.checklistapp.ui.viewmodel.TasksViewModel
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: TasksViewModel by viewModels()
+    private val taskViewModel: TasksViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,31 +32,14 @@ class MainActivity : ComponentActivity() {
             CheckListAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.LightGray
                 ) {
-                    TasksScreen()
-                }
-//                Scaffold(modifier = Modifier.fillMaxSize(),
-//                    ) { innerPadding ->
+                    TasksScreen(taskViewModel)
 //                    TasksScreen()
-//                }
+                }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CheckListAppTheme {
-        Greeting("Android")
-    }
-}
