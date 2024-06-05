@@ -1,4 +1,4 @@
-package ec.com.pmyb.checklistapp.data
+package ec.com.pmyb.checklistapp.data.persistence.di
 
 import android.content.Context
 import androidx.room.Room
