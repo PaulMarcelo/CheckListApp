@@ -1,13 +1,15 @@
 package ec.com.pmyb.checklistapp.ui.viewmodel
 
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ec.com.pmyb.checklistapp.domain.AddTaskUseCase
 import ec.com.pmyb.checklistapp.domain.GetTaskUseCase
+import ec.com.pmyb.checklistapp.domain.RemoveTaskUseCase
+import ec.com.pmyb.checklistapp.domain.UpdatTaskUseCase
 import ec.com.pmyb.checklistapp.ui.model.TaskModel
 import ec.com.pmyb.checklistapp.ui.state.TaskUIState
 import ec.com.pmyb.checklistapp.ui.state.TaskUIState.Success
@@ -19,9 +21,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class TasksViewModel @Inject constructor(
     getTaskUseCase: GetTaskUseCase,
-    private var addTaskUseCase: AddTaskUseCase
+    private var addTaskUseCase: AddTaskUseCase,
+    private var updatTaskUseCase: UpdatTaskUseCase,
+    private var removeTaskUseCase: RemoveTaskUseCase
 ) : ViewModel() {
 
     val uiState: StateFlow<TaskUIState> = getTaskUseCase().map(::Success)
@@ -32,8 +37,8 @@ class TasksViewModel @Inject constructor(
     private val _showDlg = MutableLiveData<Boolean>()
     val showDlg: LiveData<Boolean> = _showDlg
 
-    private val _tasks = mutableStateListOf<TaskModel>()
-    val taks: List<TaskModel> = _tasks
+//    private val _tasks = mutableStateListOf<TaskModel>()
+//    val taks: List<TaskModel> = _tasks
 
     fun onDlgClose() {
         _showDlg.value = false
@@ -45,7 +50,7 @@ class TasksViewModel @Inject constructor(
 
     fun createTask(it: String) {
         val task = TaskModel(task = it)
-        this._tasks.add(task)
+//        this._tasks.add(task)
         viewModelScope.launch {
             addTaskUseCase(task)
         }
@@ -53,15 +58,21 @@ class TasksViewModel @Inject constructor(
     }
 
     fun onCheckBoxSeleted(taskModel: TaskModel) {
-        val index = _tasks.indexOf(taskModel)
-        _tasks[index] = _tasks[index].let {
-            it.copy(selected = !it.selected)
+//        val index = _tasks.indexOf(taskModel)
+//        _tasks[index] = _tasks[index].let {
+//            it.copy(selected = !it.selected)
+//        }
+        viewModelScope.launch {
+            updatTaskUseCase.invoke(taskModel.copy(selected = !taskModel.selected))
         }
     }
 
     fun onItemRemove(taskModel: TaskModel) {
-        val taskFound = _tasks.find { it.id == taskModel.id }
-        _tasks.remove(taskFound)
+//        val taskFound = _tasks.find { it.id == taskModel.id }
+//        _tasks.remove(taskFound)
+        viewModelScope.launch {
+            removeTaskUseCase.invoke(taskModel)
+        }
     }
 
 }

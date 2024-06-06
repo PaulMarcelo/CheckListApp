@@ -12,15 +12,27 @@ import javax.inject.Singleton
 class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
 
     val tasks: Flow<List<TaskModel>> = taskDao.getTasks().map {
-        it.map { TaskModel(it.id,it.task,it.selected) }
+        it.map { TaskModel(it.id, it.task, it.selected) }
     }
 
     suspend fun add(taskmodel: TaskModel) {
-        val taskEntity = TaskEntity(
-            taskmodel.id,
-            taskmodel.task,
-            taskmodel.selected
-        )
-        taskDao.addTask(taskEntity)
+        taskDao.addTask(taskmodel.ToEntity())
     }
+
+    suspend fun update(taskmodel: TaskModel) {
+        taskDao.update(taskmodel.ToEntity())
+    }
+
+    suspend fun remove(taskmodel: TaskModel) {
+        taskDao.remove(taskmodel.ToEntity())
+    }
+
+}
+
+fun TaskModel.ToEntity(): TaskEntity {
+    return TaskEntity(
+        this.id,
+        this.task,
+        this.selected
+    )
 }

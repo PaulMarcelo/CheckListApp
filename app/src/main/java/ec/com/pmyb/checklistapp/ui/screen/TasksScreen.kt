@@ -1,9 +1,6 @@
 package ec.com.pmyb.checklistapp.ui.screen
 
-import android.graphics.drawable.Icon
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,11 +24,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,13 +44,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import ec.com.pmyb.checklistapp.ui.model.TaskModel
+import ec.com.pmyb.checklistapp.ui.state.TaskUIState
 import ec.com.pmyb.checklistapp.ui.viewmodel.TasksViewModel
 
 @Composable
@@ -64,22 +61,41 @@ fun TasksScreen(taskViewModel: TasksViewModel) {
 
     val showDlg: Boolean by taskViewModel.showDlg.observeAsState(initial = false)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        showAddTaskDlg(show = showDlg, onDismiss = {
-            taskViewModel.onDlgClose()
-        }, onTaskAdded = {
-            taskViewModel.createTask(it)
-        })
-        FabBtnAdd(Modifier.align(Alignment.BottomEnd), taskViewModel)
-        TaskList(taskViewModel)
+    val lifeCycle = LocalLifecycleOwner.current.lifecycle
+    val uiState by produceState<TaskUIState>(
+        initialValue = TaskUIState.Loading,
+        key1 = lifeCycle,
+        key2 = taskViewModel
+    ) {
+        lifeCycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+            taskViewModel.uiState.collect { value = it }
+        }
     }
+
+    when (uiState) {
+        is TaskUIState.Error -> TODO()
+        TaskUIState.Loading -> CircularProgressIndicator()
+        is TaskUIState.Success -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                showAddTaskDlg(show = showDlg, onDismiss = {
+                    taskViewModel.onDlgClose()
+                }, onTaskAdded = {
+                    taskViewModel.createTask(it)
+                })
+                FabBtnAdd(Modifier.align(Alignment.BottomEnd), taskViewModel)
+                TaskList((uiState as TaskUIState.Success).tasks, taskViewModel)
+            }
+        }
+    }
+
+
 }
 
 @Composable
-fun TaskList(taskViewModel: TasksViewModel) {
-    val myTaks: List<TaskModel> = taskViewModel.taks
+fun TaskList(tasks: List<TaskModel>, taskViewModel: TasksViewModel) {
+
     LazyColumn {
-        items(myTaks, key = { it.id }) { it ->
+        items(tasks, key = { it.id }) { it ->
             ItemTask(taskModel = it, taskViewModel = taskViewModel)
         }
     }
@@ -93,7 +109,7 @@ fun ItemTask(taskModel: TaskModel, taskViewModel: TasksViewModel) {
             .fillMaxWidth()
             .wrapContentHeight()
             .pointerInput(Unit) {
-                detectTapGestures (onLongPress = {
+                detectTapGestures(onLongPress = {
                     taskViewModel.onItemRemove(taskModel)
                 })
             },
