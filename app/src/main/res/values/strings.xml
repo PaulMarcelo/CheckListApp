@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">CheckListApp</string>
+    <string name="app_name">Lista de tareas</string>
+    <string name="accept">Aceptar</string>
+    <string name="empty" />
+    <string name="task" >Tarea</string>
+    <string name="update_task">Modificar tarea</string>
+    <string name="my_list">Mi lista</string>
+    <string name="added">Agregadas</string>
+    <string name="found">Encontradas</string>
+    <string name="pending">Pendientes: %1$s</string>
+    <string name="completed">Realizadas: %1$s</string>
+    <string name="delete_selected">Eliminar seleccionados</string>
+    <string name="delete_all">Eliminar todo</string>
+    <string name="about">Acerca</string>
+    <string name="information">Información</string>
+    <string name="find">Buscar</string>
+    <string name="title_app">LISTA DE TAREAS</string>
+    <string name="new_task">Nueva tarea</string>
+    <string name="required_text">Texto requerido</string>>
+
 </resources>

@@ -4,9 +4,9 @@ import ec.com.pmyb.checklistapp.data.repository.TaskRepository
 import ec.com.pmyb.checklistapp.ui.model.TaskModel
 import javax.inject.Inject
 
-class UpdatTaskUseCase @Inject constructor(private val repository: TaskRepository) {
+class SearchTaskUseCase @Inject constructor(private val repository: TaskRepository) {
 
-    suspend operator fun invoke(taskModel: TaskModel){
-        repository.update(taskModel)
+    suspend operator fun invoke(text: String){
+        repository.searchByText(text)
     }
 }

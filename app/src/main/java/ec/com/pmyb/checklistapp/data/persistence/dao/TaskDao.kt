@@ -10,15 +10,26 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM TaskEntity")
+    @Query("SELECT * FROM TaskEntity ORDER BY createDate DESC")
     fun getTasks(): Flow<List<TaskEntity>>
 
+    @Query("SELECT * FROM TaskEntity WHERE task LIKE '%' || :text || '%' ORDER BY createDate DESC")
+    fun searchByText(text:String): Flow<List<TaskEntity>>
+
     @Insert
-    suspend fun addTask(item:TaskEntity)
+    suspend fun addTask(item: TaskEntity)
 
     @Update
     suspend fun update(item: TaskEntity)
-//    @Query("DELETE FROM yourDatabaseTable WHERE id = :id")
+
     @Delete
     suspend fun remove(item: TaskEntity)
+
+    @Query("DELETE FROM TaskEntity ")
+    suspend fun removeAll()
+
+    @Query("DELETE FROM TaskEntity WHERE selected=1 ")
+    suspend fun removeSelected()
+
+
 }

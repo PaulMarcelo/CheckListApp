@@ -8,5 +8,6 @@ data class TaskEntity(
     @PrimaryKey
     val id: Int,
     val task: String,
-    var selected: Boolean = false
+    var selected: Boolean = false,
+    var createDate: String
 )

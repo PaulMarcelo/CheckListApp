@@ -4,7 +4,7 @@ import ec.com.pmyb.checklistapp.ui.model.TaskModel
 
 sealed interface TaskUIState {
 
-    object Loading:TaskUIState
+    data object Loading:TaskUIState
 
     data class Error(val throwable: Throwable):TaskUIState
 
