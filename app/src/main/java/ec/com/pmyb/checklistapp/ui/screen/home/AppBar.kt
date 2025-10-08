@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ec.com.pmyb.checklistapp.R
+import ec.com.pmyb.checklistapp.ui.model.TaskModel
 import ec.com.pmyb.checklistapp.ui.screen.UtilApp
 import ec.com.pmyb.checklistapp.ui.screen.UtilColorApp
 
@@ -49,7 +50,7 @@ fun AppBar(
     totalSelected: Int,
     showSearch: () -> Boolean,
     showDeleteAllDialog: () -> Unit,
-    showDeleteSelectedDialog: () -> Unit
+    onDeleteSelectedRequest: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableIntStateOf(0) }
@@ -116,7 +117,7 @@ fun AppBar(
                         onClick = {
                             selectedOption = 1
                             expanded = false
-                            showDeleteSelectedDialog()
+                            onDeleteSelectedRequest()
                         })
                     DropdownMenuItem(
                         text = { Text(text = stringResource(R.string.delete_all)) },

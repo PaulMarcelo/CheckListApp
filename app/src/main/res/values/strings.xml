@@ -22,5 +22,6 @@
     <string name="delete_selected_confirmation_message">¿Estás seguro de que deseas eliminar todas las tareas seleccionadas?\n\nEsta acción no se puede deshacer.</string>
     <string name="delete_task_confirmation_message">¿Estás seguro de que deseas eliminar esta tarea?\n\nEsta acción no se puede deshacer.</string>
     <string name="delete_task">Eliminar tarea</string>
+    <string name="no_items_selected">No hay tareas seleccionadas para eliminar</string>
 
 </resources>

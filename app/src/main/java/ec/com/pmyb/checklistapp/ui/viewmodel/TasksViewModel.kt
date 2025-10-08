@@ -82,8 +82,18 @@ class TasksViewModel @Inject constructor(
         _showDeleteAllDialog.value = false
     }
 
-    fun onDeleteSelectedDialogShow() {
-        _showDeleteSelectedDialog.value = true
+    fun onDeleteSelectedDialogShow(listTask: List<TaskModel>) {
+        val selectedCount = countSelected(listTask)
+        if (selectedCount > 0) {
+            _showDeleteSelectedDialog.value = true
+        } else {
+            // No hay tareas seleccionadas, se mostrará un toast
+            _showDeleteSelectedDialog.value = false
+        }
+    }
+
+    fun hasSelectedTasks(listTask: List<TaskModel>): Boolean {
+        return countSelected(listTask) > 0
     }
 
     fun onDeleteSelectedDialogClose() {

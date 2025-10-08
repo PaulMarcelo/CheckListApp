@@ -108,8 +108,12 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
                 showDeleteAllDialog = {
                     taskViewModel.onDeleteAllDialogShow()
                 },
-                showDeleteSelectedDialog = {
-                    taskViewModel.onDeleteSelectedDialogShow()
+                onDeleteSelectedRequest = {
+                    if (taskViewModel.hasSelectedTasks(listTask)) {
+                        taskViewModel.onDeleteSelectedDialogShow(listTask)
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.no_items_selected), Toast.LENGTH_SHORT).show()
+                    }
                 })
         }
     ) {
