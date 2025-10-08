@@ -34,10 +34,11 @@ import kotlinx.coroutines.launch
 
 fun <T> SwipeToDeleteContainer(
     item: T,
-    onDelete: (T) -> Unit,
+    onDeleteRequest: (T) -> Unit,
+    onResetSwipe: () -> Unit = {},
     content: @Composable (T) -> Unit
 ) {
-    var isRemoved by remember {
+    var isSwipeTriggered by remember {
         mutableStateOf(false)
     }
     // Creates the CoroutineScope
@@ -47,8 +48,9 @@ fun <T> SwipeToDeleteContainer(
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { state ->
             if (state == SwipeToDismissBoxValue.EndToStart) {
-                isRemoved = true
-                true
+                isSwipeTriggered = true
+                // No confirmamos automáticamente, esperamos la confirmación del diálogo
+                false
             } else {
                 false
             }
@@ -56,11 +58,20 @@ fun <T> SwipeToDeleteContainer(
             { 150.dp.toPx() }
         }
     )
-    LaunchedEffect(key1 = isRemoved) {
-        if (isRemoved) {
+    
+    LaunchedEffect(key1 = isSwipeTriggered) {
+        if (isSwipeTriggered) {
             coroutineScope.launch {
-                onDelete(item)
+                onDeleteRequest(item)
             }
+        }
+    }
+    
+    // Reset the swipe state when needed
+    LaunchedEffect(key1 = onResetSwipe) {
+        if (isSwipeTriggered) {
+            dismissState.reset()
+            isSwipeTriggered = false
         }
     }
 

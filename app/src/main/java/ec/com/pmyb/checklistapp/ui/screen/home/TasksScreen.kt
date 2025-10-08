@@ -89,6 +89,8 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
     val showDialog: Boolean by taskViewModel.showDlg.observeAsState(initial = false)
     val showDeleteAllDialog: Boolean by taskViewModel.showDeleteAllDialog.observeAsState(initial = false)
     val showDeleteSelectedDialog: Boolean by taskViewModel.showDeleteSelectedDialog.observeAsState(initial = false)
+    val showSwipeDeleteDialog: Boolean by taskViewModel.showSwipeDeleteDialog.observeAsState(initial = false)
+    val resetSwipeState: Boolean by taskViewModel.resetSwipeState.observeAsState(initial = false)
 
     Scaffold(
         topBar = {
@@ -132,6 +134,10 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
                 TaskList(
                     listTask, taskViewModel, textFilterState,
                     scrollUpState = scrollUpState,
+                    resetSwipeState = resetSwipeState,
+                    onResetSwipeConsumed = {
+                        taskViewModel.resetSwipeStateConsumed()
+                    },
                     totalItems = {
                         totalState = it
                     },
@@ -165,6 +171,12 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
                     show = showDeleteSelectedDialog,
                     onDismiss = { taskViewModel.onDeleteSelectedDialogClose() },
                     onConfirm = { taskViewModel.removeSelected() }
+                )
+                
+                DeleteTaskConfirmationDialog(
+                    show = showSwipeDeleteDialog,
+                    onDismiss = { taskViewModel.onSwipeDeleteDialogClose() },
+                    onConfirm = { taskViewModel.onSwipeDeleteConfirmed() }
                 )
             }
         }

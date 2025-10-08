@@ -57,6 +57,15 @@ class TasksViewModel @Inject constructor(
     private val _showDeleteSelectedDialog = MutableLiveData<Boolean>()
     val showDeleteSelectedDialog: LiveData<Boolean> = _showDeleteSelectedDialog
 
+    private val _showSwipeDeleteDialog = MutableLiveData<Boolean>()
+    val showSwipeDeleteDialog: LiveData<Boolean> = _showSwipeDeleteDialog
+
+    private val _taskToDelete = MutableLiveData<TaskModel>()
+    val taskToDelete: LiveData<TaskModel> = _taskToDelete
+
+    private val _resetSwipeState = MutableLiveData<Boolean>()
+    val resetSwipeState: LiveData<Boolean> = _resetSwipeState
+
     fun onDlgClose() {
         _showDlg.value = false
     }
@@ -79,6 +88,32 @@ class TasksViewModel @Inject constructor(
 
     fun onDeleteSelectedDialogClose() {
         _showDeleteSelectedDialog.value = false
+    }
+
+    fun onSwipeDeleteDialogShow(taskModel: TaskModel) {
+        _taskToDelete.value = taskModel
+        _showSwipeDeleteDialog.value = true
+    }
+
+    fun onSwipeDeleteDialogClose() {
+        _showSwipeDeleteDialog.value = false
+        _taskToDelete.value = null
+        _resetSwipeState.value = true
+    }
+
+    fun onSwipeDeleteConfirmed() {
+        _taskToDelete.value?.let { task ->
+            viewModelScope.launch {
+                removeTaskUseCase.invoke(task)
+            }
+        }
+        _showSwipeDeleteDialog.value = false
+        _taskToDelete.value = null
+        _resetSwipeState.value = true
+    }
+
+    fun resetSwipeStateConsumed() {
+        _resetSwipeState.value = false
     }
 
     fun setTaskToUpdate(taskModel: TaskModel) {

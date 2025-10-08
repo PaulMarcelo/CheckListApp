@@ -58,6 +58,8 @@ fun TaskList(
     taskViewModel: TasksViewModel,
     textFilter: String,
     scrollUpState: Boolean,
+    resetSwipeState: Boolean,
+    onResetSwipeConsumed: () -> Unit,
     totalItems: (Int) -> Unit,
     totalItemsSelected: (Int) -> Unit,
     totalItemsUnselected: (Int) -> Unit,
@@ -76,10 +78,16 @@ fun TaskList(
             Box(
                 modifier = Modifier.animateItemPlacement(),
             ) {
-                SwipeToDeleteContainer(item = it, onDelete = {
-                    taskViewModel.onItemRemove(it)
-                    scrollUpStateAction(false)
-                }
+                SwipeToDeleteContainer(
+                    item = it, 
+                    onDeleteRequest = {
+                        taskViewModel.onSwipeDeleteDialogShow(it)
+                    },
+                    onResetSwipe = {
+                        if (resetSwipeState) {
+                            onResetSwipeConsumed()
+                        }
+                    }
                 ) {
                     ItemTask(
                         taskModel = it,

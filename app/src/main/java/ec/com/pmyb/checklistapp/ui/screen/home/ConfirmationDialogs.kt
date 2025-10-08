@@ -170,3 +170,77 @@ fun DeleteSelectedConfirmationDialog(
         )
     }
 }
+
+@Composable
+fun DeleteTaskConfirmationDialog(
+    show: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    if (show) {
+        val isSystemInDarkTheme = isSystemInDarkTheme()
+        val principalColorApp = UtilColorApp.getModeAppPrincipalColor(isSystemInDarkTheme)
+        val textColor = UtilColorApp.getTextColor(isSystemInDarkTheme)
+        val backgroundColor = UtilColorApp.backgroundDialogColor(isSystemInDarkTheme)
+
+        CustomDialog(
+            title = {
+                Surface(
+                    color = principalColorApp,
+                    contentColor = Color.White,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_task),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 16.dp),
+                        color = textColor,
+                    )
+                }
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = backgroundColor)
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_task_confirmation_message),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = textColor,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            },
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirm()
+                        onDismiss()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.accept),
+                        color = Color.Red,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        color = textColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        )
+    }
+}
