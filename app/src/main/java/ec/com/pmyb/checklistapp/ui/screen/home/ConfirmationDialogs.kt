@@ -79,7 +79,7 @@ fun DeleteAllConfirmationDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.accept),
-                        color = Color.Red,
+                        color = textColor,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -153,7 +153,7 @@ fun DeleteSelectedConfirmationDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.accept),
-                        color = Color.Red,
+                        color = textColor,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -227,7 +227,7 @@ fun DeleteTaskConfirmationDialog(
                 ) {
                     Text(
                         text = stringResource(R.string.accept),
-                        color = Color.Red,
+                        color = textColor,
                         fontWeight = FontWeight.Bold
                     )
                 }

@@ -74,8 +74,17 @@ class TasksViewModel @Inject constructor(
         _showDlg.value = true
     }
 
-    fun onDeleteAllDialogShow() {
-        _showDeleteAllDialog.value = true
+    fun onDeleteAllDialogShow(listTask: List<TaskModel>) {
+        if (listTask.isNotEmpty()) {
+            _showDeleteAllDialog.value = true
+        } else {
+            // No hay tareas en la lista, se mostrará un toast
+            _showDeleteAllDialog.value = false
+        }
+    }
+
+    fun hasTasks(listTask: List<TaskModel>): Boolean {
+        return listTask.isNotEmpty()
     }
 
     fun onDeleteAllDialogClose() {
