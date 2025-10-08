@@ -48,8 +48,8 @@ fun AppBar(
     totalUnselected: Int,
     totalSelected: Int,
     showSearch: () -> Boolean,
-    removeAll: () -> Unit,
-    removeSelected: () -> Unit
+    showDeleteAllDialog: () -> Unit,
+    showDeleteSelectedDialog: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableIntStateOf(0) }
@@ -116,14 +116,14 @@ fun AppBar(
                         onClick = {
                             selectedOption = 1
                             expanded = false
-                            removeSelected()
+                            showDeleteSelectedDialog()
                         })
                     DropdownMenuItem(
                         text = { Text(text = stringResource(R.string.delete_all)) },
                         onClick = {
                             selectedOption = 2
                             expanded = false
-                            removeAll()
+                            showDeleteAllDialog()
                         })
                     DropdownMenuItem(
                         text = { Text(text = stringResource(R.string.about)) },

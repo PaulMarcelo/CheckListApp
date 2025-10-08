@@ -16,6 +16,9 @@
     <string name="find">Buscar</string>
     <string name="title_app">LISTA DE TAREAS</string>
     <string name="new_task">Nueva tarea</string>
-    <string name="required_text">Texto requerido</string>>
+    <string name="required_text">Texto requerido</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete_all_confirmation_message">¿Estás seguro de que deseas eliminar todas las tareas?\n\nEsta acción no se puede deshacer.</string>
+    <string name="delete_selected_confirmation_message">¿Estás seguro de que deseas eliminar todas las tareas seleccionadas?\n\nEsta acción no se puede deshacer.</string>
 
 </resources>

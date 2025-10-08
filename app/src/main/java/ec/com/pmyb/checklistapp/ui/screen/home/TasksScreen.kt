@@ -87,6 +87,8 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
     var totalSelectedState by remember { mutableIntStateOf(0) }
     var scrollUpState by remember { mutableStateOf(false) }
     val showDialog: Boolean by taskViewModel.showDlg.observeAsState(initial = false)
+    val showDeleteAllDialog: Boolean by taskViewModel.showDeleteAllDialog.observeAsState(initial = false)
+    val showDeleteSelectedDialog: Boolean by taskViewModel.showDeleteSelectedDialog.observeAsState(initial = false)
 
     Scaffold(
         topBar = {
@@ -101,11 +103,11 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
                     }
                     return@AppBar showSearchState
                 },
-                removeAll = {
-                    taskViewModel.removeAll()
+                showDeleteAllDialog = {
+                    taskViewModel.onDeleteAllDialogShow()
                 },
-                removeSelected = {
-                    taskViewModel.removeSelected()
+                showDeleteSelectedDialog = {
+                    taskViewModel.onDeleteSelectedDialogShow()
                 })
         }
     ) {
@@ -150,6 +152,19 @@ fun Body(taskViewModel: TasksViewModel, uiState: TaskUIState) {
                     onTaskUpdate = {
                         taskViewModel.onTasksUpdate(it)
                     }
+                )
+                
+                // Diálogos de confirmación para eliminación
+                DeleteAllConfirmationDialog(
+                    show = showDeleteAllDialog,
+                    onDismiss = { taskViewModel.onDeleteAllDialogClose() },
+                    onConfirm = { taskViewModel.removeAll() }
+                )
+                
+                DeleteSelectedConfirmationDialog(
+                    show = showDeleteSelectedDialog,
+                    onDismiss = { taskViewModel.onDeleteSelectedDialogClose() },
+                    onConfirm = { taskViewModel.removeSelected() }
                 )
             }
         }

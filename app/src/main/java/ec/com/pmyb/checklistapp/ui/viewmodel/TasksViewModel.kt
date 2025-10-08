@@ -51,12 +51,34 @@ class TasksViewModel @Inject constructor(
 
     private val _textToShowAnimate = MutableLiveData<String>()
 
+    private val _showDeleteAllDialog = MutableLiveData<Boolean>()
+    val showDeleteAllDialog: LiveData<Boolean> = _showDeleteAllDialog
+
+    private val _showDeleteSelectedDialog = MutableLiveData<Boolean>()
+    val showDeleteSelectedDialog: LiveData<Boolean> = _showDeleteSelectedDialog
+
     fun onDlgClose() {
         _showDlg.value = false
     }
 
     fun onDlgShow() {
         _showDlg.value = true
+    }
+
+    fun onDeleteAllDialogShow() {
+        _showDeleteAllDialog.value = true
+    }
+
+    fun onDeleteAllDialogClose() {
+        _showDeleteAllDialog.value = false
+    }
+
+    fun onDeleteSelectedDialogShow() {
+        _showDeleteSelectedDialog.value = true
+    }
+
+    fun onDeleteSelectedDialogClose() {
+        _showDeleteSelectedDialog.value = false
     }
 
     fun setTaskToUpdate(taskModel: TaskModel) {
