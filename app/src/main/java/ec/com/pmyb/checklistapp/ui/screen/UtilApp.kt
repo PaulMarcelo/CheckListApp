@@ -9,6 +9,6 @@ object UtilApp {
     ): String {
         val manager = context.packageManager
         val info = manager.getPackageInfo(context.packageName, PackageManager.GET_ACTIVITIES)
-        return info.versionName
+        return "1.0.1"//info.versionName
     }
 }
